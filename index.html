@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Tugas Akhir - PEMDAS/BODMAS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Font Tampilan */
+        #display, #history-display {
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+        }
+
+        /* Latar Belakang Body - Hitam Murni (iPhone Vibe) */
+        body {
+            background-color: #ffffff;
+        }
+
+        /* Kontainer Kalkulator (Responsive Design) */
+        #calculator {
+            background-color: #000000;
+            /* --- KODE BOX-SHADOW UNTUK ELEVASI --- */
+            box-shadow: 
+                0 4px 10px rgba(0, 0, 0, 0.5), /* Bayangan Utama */
+                0 10px 40px rgba(0, 0, 0, 0.3), /* Bayangan Dalam untuk Kedalaman */
+                0 0 0 10px rgba(255, 255, 255, 0.08); /* Garis Highlight Tipis */
+            
+           
+            border-radius: 1.5rem; 
+            padding-bottom: 2rem; 
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        
+        /* Display */
+        #display {
+            color: white;
+            font-weight: 200; 
+            font-size: 5rem; 
+            line-height: 1;
+            padding-top: 1rem;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Tombol Dasar */
+        .btn-base {
+            padding: 1rem;
+            font-size: 2rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px; /* Bundar Sempurna (iPhone Style) */
+            transition: background-color 0.1s, transform 0.1s;
+            aspect-ratio: 1 / 1; 
+            user-select: none;
+        }
+
+        /* Skema Warna Tombol iPhone */
+        .btn-num { 
+            background-color: #333333;
+            color: white;
+        }
+
+        .btn-control { 
+            background-color: #A5A5A5;
+            color: black;
+            font-weight: 400;
+        }
+        
+        .btn-op { 
+            background-color: #FF9500;
+            color: white;
+        }
+
+        .btn-op.active { 
+            background-color: #FFFFFF;
+            color: #FF9500;
+        }
+        
+        /* Penyesuaian Tombol 0 (di HTML menggunakan col-span-2) */
+        .btn-zero {
+            justify-content: flex-start;
+            padding-left: 2.2rem;
+            border-radius: 4rem; 
+        }
+
+        /* Animasi Pop dan Keyboard Active */
+        .btn-base:active, .key-active {
+            filter: brightness(130%); 
+            transform: scale(0.95);
+        }
+
+        /* Style untuk Panel Advanced (History/Memory) */
+        .btn-tab {
+            background-color: #1c1c1c !important;
+            color: #eeeeee !important;
+            font-size: 0.8rem !important;
+            padding: 0.5rem !important;
+            border-radius: 0.5rem !important;
+        }
+        #advanced-panel {
+            background-color: #1c1c1c;
+            color: #eeeeee;
+            border: 1px solid #333333;
+            font-family: 'Consolas', monospace;
+        }
+        #current-expression {
+            color: #AAAAAA; 
+            font-size: 1.2rem;
+            min-height: 1.5rem;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div id="calculator" class="p-4 w-full max-w-sm">
+
+        <div id="history-display" class="text-right text-sm h-5 overflow-hidden"></div>
+
+        <div id="current-expression" class="text-right overflow-x-auto whitespace-nowrap tracking-tight pr-2"></div>
+        
+        <div id="display" class="text-right overflow-x-auto whitespace-nowrap tracking-tight mb-4 pr-2">0</div>
+
+        <div class="flex mb-4 space-x-2">
+            <button id="show-history" class="btn-tab flex-1 transition duration-200 shadow-md">History</button>
+            <button id="show-memory" class="btn-tab flex-1 transition duration-200 shadow-md">Memory (0)</button>
+        </div>
+
+        <div id="advanced-panel" class="mb-4 p-3 rounded-lg hidden max-h-40 overflow-y-auto">
+        </div>
+
+        <div class="grid grid-cols-4 gap-3 mt-4 text-center">
+            <button data-action="memory" data-value="M+" class="btn-tab text-xs p-1">M+</button>
+            <button data-action="memory" data-value="M-" class="btn-tab text-xs p-1">M-</button>
+            <button data-action="memory" data-value="MR" class="btn-tab text-xs p-1">MR</button>
+            <button data-action="memory" data-value="MC" class="btn-tab text-xs p-1">MC</button>
+        </div>
+        
+        <div id="buttons-grid" class="grid grid-cols-4 gap-3">
+            <button data-action="clear" data-value="AC" id="clear-btn" class="btn-base btn-control">AC</button>
+            <button data-action="clear-entry" data-value="CE" class="btn-base btn-control">CE</button> 
+            <button data-action="operator" data-value="%" class="btn-base btn-control">%</button>
+            <button data-action="operator" data-value="÷" class="btn-base btn-op">÷</button>
+
+            <button data-action="number" data-value="7" class="btn-base btn-num">7</button>
+            <button data-action="number" data-value="8" class="btn-base btn-num">8</button>
+            <button data-action="number" data-value="9" class="btn-base btn-num">9</button>
+            <button data-action="operator" data-value="×" class="btn-base btn-op">×</button>
+
+            <button data-action="number" data-value="4" class="btn-base btn-num">4</button>
+            <button data-action="number" data-value="5" class="btn-base btn-num">5</button>
+            <button data-action="number" data-value="6" class="btn-base btn-num">6</button>
+            <button data-action="operator" data-value="-" class="btn-base btn-op">-</button>
+
+            <button data-action="number" data-value="1" class="btn-base btn-num">1</button>
+            <button data-action="number" data-value="2" class="btn-base btn-num">2</button>
+            <button data-action="number" data-value="3" class="btn-base btn-num">3</button>
+            <button data-action="operator" data-value="+" class="btn-base btn-op">+</button>
+
+            <button data-action="number" data-value="0" class="btn-base btn-num">0</button> 
+            <button data-action="decimal" data-value="." class="btn-base btn-num">.</button>
+            <button data-action="equals" data-value="=" class="btn-base btn-op">=</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
