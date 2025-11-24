@@ -29,11 +29,15 @@ Kalkulator ini dilengkapi dengan panel tersembunyi untuk manajemen sesi perhitun
 * **MC (Memory Clear)**: Mengatur ulang nilai memori ke nol.
 
 ---
+
 # Tampilan website
 <img width="475" height="864" alt="image" src="https://github.com/user-attachments/assets/70b9e123-292b-48b6-ae14-6ea565b87d5d" />
 <img width="442" height="868" alt="image" src="https://github.com/user-attachments/assets/17129cb8-0494-4461-935f-80c66d9e9ae3" />
 <img width="442" height="900" alt="image" src="https://github.com/user-attachments/assets/a9760630-f73e-4f54-b47b-44f2d6ae3dd3" />
 <img width="466" height="835" alt="image" src="https://github.com/user-attachments/assets/7e2f5850-8d37-4080-919b-ea8780e46573" />
+
+---
+
 ##  Panduan Penggunaan Proyek
 
 Proyek ini hanya membutuhkan *browser* modern untuk dijalankan.
